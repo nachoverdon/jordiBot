@@ -11,7 +11,8 @@ type CommandInfo = {
   args: string | null
 }
 
-const prefix = '.';
+const PREFIX = '.';
+const BT = '```';
 const commands = new Map<String, Command>();
 const client = new Client();
 const kayn = Kayn(process.env.RIOT_API_KEY)({
@@ -32,7 +33,7 @@ export function registerCommand(name: string, desc: string, fn: (msg: Message) =
 
 export function getCommandInfo(msg: Message): CommandInfo | null {
 
-  if (msg.content.substr(0, prefix.length) !== prefix) return null;
+  if (msg.content.substr(0, PREFIX.length) !== PREFIX) return null;
 
   const to = msg.content.indexOf(' ') !== -1 ? msg.content.indexOf(' ') : undefined;
   const name = msg.content.substring(1, to);
@@ -75,10 +76,10 @@ function help(msg: Message) {
   let cmds = '';
 
   for (const [key, cmd] of commands) {
-    cmds += `${prefix}${key} - ${cmd.desc}\n\n`;
+    cmds += `${PREFIX}${key} - ${cmd.desc}\n\n`;
   }
 
-  msg.channel.send(`Comandos disp0nibles:\n\`\`\`${cmds}\`\`\``);
+  msg.channel.send(`Comandos disp0nibles:\n${BT}${cmds}${BT}`);
 }
 
 registerCommand('help', 'Muestra los comandos disponibles', help);
@@ -91,19 +92,29 @@ async function elo(msg: Message) {
     const summonerData = await kayn.SummonerV4.by.name(summoner);
 
     if (summonerData.name) {
+
       const leagues = await kayn.LeaguePositionsV4.by.summonerID(summonerData.id);
 
       for (const lg of leagues) {
-        message += `${lg.queueType} - ${lg.tier} ${lg.rank} (${lg.leaguePoints})\n\n`;
+
+        const win = lg.wins, loss = lg.losses;
+        const winrate = (win / (win + loss)) * 100;
+
+        message += `${lg.queueType} - ${lg.tier} ${lg.rank} (${lg.leaguePoints})\n`;
+        message += `Wins: ${win} - Losses: ${loss} [Win rate: ${winrate}]\n\n`;
+
       }
 
-      message = '```' + message + '```';
+      message = BT + message + BT;
 
     } else {
+
       message = `No se ha podido encontrar datos de ${summoner}`;
+
     }
 
     msg.channel.send(message);
+
   } catch (err) {
     console.log('[ERROR]', err);
   }
