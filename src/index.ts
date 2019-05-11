@@ -37,7 +37,7 @@ export function getCommandInfo(msg: Message): CommandInfo | null {
 
   const to = msg.content.indexOf(' ') !== -1 ? msg.content.indexOf(' ') : undefined;
   const name = msg.content.substring(1, to);
-  const args = to ? msg.content.substring(to) : null;
+  const args = to ? msg.content.substring(to).trim() : null;
 
   return {
     name: name,
