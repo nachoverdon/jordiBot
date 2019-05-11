@@ -1,4 +1,3 @@
-import { commands as cmds } from 'commands';
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const commands = {};
