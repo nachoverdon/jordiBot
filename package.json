@@ -1,0 +1,33 @@
+{
+  "name": "jordibot",
+  "version": "0.1.0",
+  "description": "A bot to troll my friends",
+  "main": "src/index.js",
+  "dependencies": {
+    "discord.js": "^11.4.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nachoverdon/jordiBot.git"
+  },
+  "keywords": [
+    "jordi",
+    "bot",
+    "dam",
+    "paquito",
+    "rajao",
+    "lol",
+    "elo"
+  ],
+  "author": "Nacho Verdón",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nachoverdon/jordiBot/issues"
+  },
+  "homepage": "https://github.com/nachoverdon/jordiBot"
+}
