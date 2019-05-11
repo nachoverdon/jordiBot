@@ -1,4 +1,5 @@
 import { Client, Message } from 'discord.js';
+import { Kayn, REGIONS } from 'kayn';
 
 type Command = {
   fn: (msg: Message) => void,
@@ -11,8 +12,14 @@ type CommandInfo = {
 }
 
 const prefix = '.';
-const client = new Client();
 const commands = new Map<String, Command>();
+const client = new Client();
+const kayn = Kayn(process.env.RIOT_API_KEY)({
+  region: REGIONS.EUROPE_WEST,
+  requestOptions: {
+    burst: true
+  }
+});
 
 export function registerCommand(name: string, desc: string, fn: (msg: Message) => void) {
 
@@ -75,3 +82,20 @@ function help(msg: Message) {
 }
 
 registerCommand('help', 'Muestra los comandos disponibles', help);
+
+async function elo(msg: Message) {
+  let message = '';
+  const summoner = getCommandInfo(msg).name;
+
+  const summonerData = await kayn.SummonerV4.by.name(summoner);
+
+  if (!summonerData.name) {
+    message = `No se ha podido encontrar datos de ${summoner}`;
+  }
+
+  const res = await kayn.LeagueV4.by.uuid(summonerData.id);
+
+  message = res.toString();
+
+  msg.channel.send(message);
+}
