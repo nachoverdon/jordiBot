@@ -66,12 +66,6 @@ client.on('message', (msg: Message) => {
 
 client.login(process.env.DISCORD_TOKEN);
 
-function paquito(msg: Message) {
-  msg.channel.send('Rajao!!!');
-}
-
-registerCommand('paquito', 'Llamadme rajao si quereis...', paquito);
-
 function help(msg: Message) {
   let cmds = '';
 
@@ -83,6 +77,12 @@ function help(msg: Message) {
 }
 
 registerCommand('help', 'Muestra los comandos disponibles', help);
+
+function paquito(msg: Message) {
+  msg.channel.send('Rajao!!!');
+}
+
+registerCommand('paquito', 'Llamadme rajao si quereis...', paquito);
 
 async function elo(msg: Message) {
   let message = '';
