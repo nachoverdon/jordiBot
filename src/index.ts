@@ -98,10 +98,10 @@ async function elo(msg: Message) {
       for (const lg of leagues) {
 
         const win = lg.wins, loss = lg.losses;
-        const winrate = (win / (win + loss)) * 100;
+        const winrate = ((win / (win + loss)) * 100).toFixed(2);
 
         message += `${lg.queueType} - ${lg.tier} ${lg.rank} (${lg.leaguePoints})\n`;
-        message += `Wins: ${win} - Losses: ${loss} [Win rate: ${winrate}]\n\n`;
+        message += `Wins: ${win} - Losses: ${loss} [Win rate: ${winrate}%]\n\n`;
 
       }
 
