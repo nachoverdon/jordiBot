@@ -99,3 +99,5 @@ async function elo(msg: Message) {
 
   msg.channel.send(message);
 }
+
+registerCommand('elo', 'Te dice lo malo que eres al LOL', elo);
