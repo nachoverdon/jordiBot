@@ -56,7 +56,7 @@ client.on('message', (msg: Message) => {
 
 });
 
-client.login('NTc2NTQ3MTc5MzUxNTA2OTgx.XNYOEQ.GG5MjvbwbwDP4c_EABsuC5dPGyw');
+client.login(process.env.DISCORD_TOKEN);
 
 function paquito(msg: Message) {
   msg.channel.send('Rajao!!!');
