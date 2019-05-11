@@ -85,8 +85,8 @@ function paquito(msg: Message) {
 registerCommand('paquito', 'Llamadme rajao si quereis...', paquito);
 
 async function elo(msg: Message) {
-  let message = '';
   const summoner = getCommandInfo(msg).args;
+  let message = `No se ha podido encontrar datos de ${summoner}`;
 
   try {
     const summonerData = await kayn.SummonerV4.by.name(summoner);
@@ -95,29 +95,27 @@ async function elo(msg: Message) {
 
       const leagues = await kayn.LeaguePositionsV4.by.summonerID(summonerData.id);
 
+      let msg = '';
+
       for (const lg of leagues) {
 
         const win = lg.wins, loss = lg.losses;
         const winrate = ((win / (win + loss)) * 100).toFixed(2);
 
-        message += `${lg.queueType} - ${lg.tier} ${lg.rank} (${lg.leaguePoints})\n`;
-        message += `Wins: ${win} - Losses: ${loss} [Win rate: ${winrate}%]\n\n`;
+        msg += `${lg.queueType} - ${lg.tier} ${lg.rank} (${lg.leaguePoints})\n`;
+        msg += `Wins: ${win} - Losses: ${loss} [Win rate: ${winrate}%]\n\n`;
 
       }
 
-      message = BT + message + BT;
-
-    } else {
-
-      message = `No se ha podido encontrar datos de ${summoner}`;
+      message = BT + msg + BT;
 
     }
-
-    msg.channel.send(message);
 
   } catch (err) {
     console.log('[ERROR]', err);
   }
+
+  msg.channel.send(message);
 }
 
 registerCommand('elo', 'Te dice lo malo que eres al LOL', elo);
