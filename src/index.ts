@@ -94,7 +94,7 @@ async function elo(msg: Message) {
       const leagues = await kayn.LeaguePositionsV4.by.summonerID(summonerData.id);
 
       for (const lg of leagues) {
-        message += `${lg.queueType} - ${lg.tier} ${lg.rank}\n\n`;
+        message += `${lg.queueType} - ${lg.tier} ${lg.rank} (${lg.leaguePoints})\n\n`;
       }
 
       message = '```' + message + '```';
