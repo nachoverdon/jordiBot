@@ -85,19 +85,28 @@ registerCommand('help', 'Muestra los comandos disponibles', help);
 
 async function elo(msg: Message) {
   let message = '';
-  const summoner = getCommandInfo(msg).name;
+  const summoner = getCommandInfo(msg).args;
 
-  const summonerData = await kayn.SummonerV4.by.name(summoner);
+  try {
+    const summonerData = await kayn.SummonerV4.by.name(summoner);
 
-  if (!summonerData.name) {
-    message = `No se ha podido encontrar datos de ${summoner}`;
+    if (summonerData.name) {
+      const leagues = await kayn.LeaguePositionsV4.by.summonerID(summonerData.id);
+
+      for (const lg of leagues) {
+        message += `${lg.queueType} - ${lg.tier} ${lg.rank}\n\n`;
+      }
+
+      message = '```' + message + '```';
+
+    } else {
+      message = `No se ha podido encontrar datos de ${summoner}`;
+    }
+
+    msg.channel.send(message);
+  } catch (err) {
+    console.log('[ERROR]', err);
   }
-
-  const res = await kayn.LeagueV4.by.uuid(summonerData.id);
-
-  message = res.toString();
-
-  msg.channel.send(message);
 }
 
 registerCommand('elo', 'Te dice lo malo que eres al LOL', elo);
