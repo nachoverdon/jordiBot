@@ -19,7 +19,10 @@ const commands = new Map<String, Command>();
 const client = new Client();
 
 const kayn = Kayn(process.env.RIOT_API_KEY)({
-  region: REGIONS.EUROPE_WEST
+  region: REGIONS.EUROPE_WEST,
+  requestOptions: {
+    burst: true
+  }
 });
 
 const pubgApi = new PubgAPI(process.env.PUBG_API_KEY, PlatformRegion.PC_EU);
