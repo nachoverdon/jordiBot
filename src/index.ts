@@ -1,5 +1,6 @@
 import { Client, Message } from 'discord.js';
 import { Kayn, REGIONS } from 'kayn';
+import { PubgAPI, PlatformRegion, Player, PlayerSeason, Season } from 'pubg-typescript-api';
 
 type Command = {
   fn: (msg: Message) => void,
@@ -14,13 +15,17 @@ type CommandInfo = {
 const PREFIX = '.';
 const BT = '```';
 const commands = new Map<String, Command>();
+
 const client = new Client();
+
 const kayn = Kayn(process.env.RIOT_API_KEY)({
   region: REGIONS.EUROPE_WEST,
   requestOptions: {
     burst: true
   }
 });
+
+const pubgApi = new PubgAPI(process.env.PUBG_API_KEY, PlatformRegion.PC_EU);
 
 export function registerCommand(name: string, desc: string, fn: (msg: Message) => void) {
 
@@ -119,3 +124,47 @@ async function elo(msg: Message) {
 }
 
 registerCommand('elo', 'Te dice lo malo que eres al LOL', elo);
+
+async function pubg(msg: Message) {
+  const name = getCommandInfo(msg).args;
+
+  let message = `No se ha podido encontrar datos de ${name}`;
+
+  try {
+    const request = await Player.filterByName(pubgApi, [name]);
+    const player = request[0];
+    const seasons = await Season.list(pubgApi);
+
+    const ps = await PlayerSeason.get(pubgApi, player.id, (() => {
+
+      for (const season of seasons) {
+
+        if (season.isCurrentSeason) return season.id;
+
+      }
+
+      return null;
+
+    })());
+
+    let wins = 0;
+    let played = 0;
+
+    for (const mode of [ps.soloFPPStats, ps.duoFPPStats, ps.squadFPPStats, ps.soloStats, ps.duoStats, ps.squadStats]) {
+
+      wins += mode.wins;
+      played += mode.roundsPlayed;
+
+    }
+
+    const winrate = (wins / played * 100).toFixed(2);
+    msg.channel.send(`Total wins: ${wins} - Played: ${played} - Winrate: ${winrate}%`);
+
+  } catch (err) {
+    console.log(err);
+  }
+
+  msg.channel.send(message);
+}
+
+registerCommand('pubg', 'Si creías que eras malo al LOL...', pubg);

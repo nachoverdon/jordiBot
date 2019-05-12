@@ -12,6 +12,7 @@
     "discord.js": "^11.4.2",
     "eslint": "^5.16.0",
     "kayn": "^0.9.8",
+    "pubg-typescript-api": "^1.6.0",
     "typescript": "^3.4.5"
   },
   "devDependencies": {},
