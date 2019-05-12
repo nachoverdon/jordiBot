@@ -112,7 +112,7 @@ async function elo(msg: Message) {
 
       }
 
-      message = BT + msg + BT;
+      message = msg;
 
     }
 
@@ -158,7 +158,7 @@ async function pubg(msg: Message) {
     }
 
     const winrate = (wins / played * 100).toFixed(2);
-    msg.channel.send(`Total wins: ${wins} - Played: ${played} - Winrate: ${winrate}%`);
+    message = `Total wins: ${wins} - Played: ${played} - Winrate: ${winrate}%`;
 
   } catch (err) {
     console.log(err);
