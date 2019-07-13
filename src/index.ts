@@ -1,6 +1,7 @@
-import { Client, Message } from 'discord.js';
+import { Client, Message, User, RichEmbed, Attachment } from 'discord.js';
 import { Kayn, REGIONS } from 'kayn';
 import { PubgAPI, PlatformRegion, Player, PlayerSeason, Season } from 'pubg-typescript-api';
+import * as nekosLife from 'nekos.life';
 
 type Command = {
   fn: (msg: Message) => void,
@@ -26,6 +27,7 @@ const kayn = Kayn(process.env.RIOT_API_KEY)({
 });
 
 const pubgApi = new PubgAPI(process.env.PUBG_API_KEY, PlatformRegion.PC_EU);
+const neko = new nekosLife.default();
 
 export function registerCommand(name: string, desc: string, fn: (msg: Message) => void) {
 
@@ -168,3 +170,27 @@ async function pubg(msg: Message) {
 }
 
 registerCommand('pubg', 'Si creías que eras malo al LOL...', pubg);
+
+async function sendLizard(msg: Message) {
+  try {
+
+    await neko.sfw.lizard().then((req) => {
+
+      for (const [key, user] of msg.mentions.users.entries()) {
+        if (user.bot) continue;
+
+        msg.client.users.get(key).send(new Attachment(req.url));
+      }
+
+    });
+
+    msg.channel.send('LizardExpress agradece que haya elegido nuestros servicios.');
+
+  } catch (err) {
+    console.log(err);
+    msg.channel.send('Algo no funsionó correctamente.');
+  }
+
+}
+
+registerCommand('sendlizard', 'Regala amor al usuario especificado', sendLizard);
